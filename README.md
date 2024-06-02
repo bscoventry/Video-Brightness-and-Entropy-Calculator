@@ -6,6 +6,7 @@ To create a conda environment to run this code, start by
 ```
 conda create -n VideoAnalysis python=3.10           
 conda activate VideoAnalysis
+git clone https://github.com/bscoventry/Video-Brightness-and-Entropy-Calculator.git
 ```
 Other versions of Python may work, but only 3.10 was tested. 
 Only a few packages are needed. Install the following:
