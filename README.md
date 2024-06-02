@@ -1,4 +1,4 @@
-# Video-Brightness-and-Entropy-Calculator
+# Video Brightness and Complexity Calculator
 Calculates the brightness and complexity as information entropy of a video
 
 # Necessary packages and conda installation
@@ -24,3 +24,6 @@ should be stored in a seperate folder. Mine is set to C://CodeRepos//Videos but 
 python VideoStatistics.py
 ```
 In the directory containing VideoStatistics.py, a new file "Brightness_Complexity.csv" will have been created.
+
+# A note on Complexity
+Complexity here is measured as the frame by frame entropy measured in bits as Shannon entropy. Mean entropy here is thus frame-by-frame mean entropy across the entire video. Because this is Shannon entropy, a fully static frame, such as an all white or all black frame will have an entropy value of 0. 
