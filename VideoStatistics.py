@@ -12,6 +12,7 @@ import pandas as pd
 from scipy.stats import entropy
 def get_frames_brightness_complexity(filename):
     # Create a VideoCapture object 'video' to open the video file for reading.
+
     video = cv2.VideoCapture(filename)
     brightness_values = []
     entropyVec = []
@@ -23,6 +24,7 @@ def get_frames_brightness_complexity(filename):
         # If 'ret' is True, the frame was read successfully.
         if ret:
             # compute average brightness/frame
+
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             avg = np.mean(hsv[:,:, 2]) 
             avg = (avg/255)*100
@@ -38,26 +40,31 @@ def get_frames_brightness_complexity(filename):
         else:
             # If 'ret' is False, it means there are no more frames to read in the video,
             # so we break the loop and stop the generator.
+
             break
+
+    fbfentropy = np.abs(np.diff(entropyVec))
     Avg_frame_entropy = np.mean(entropyVec)
+    Avg_frame2frame_entropy = np.mean(fbfentropy)
     # Release the VideoCapture object to free up resources.
     video.release()
     #compute mean brightness
     avg_brightness = statistics.mean(brightness_values)
 
-    return brightness_values, avg_brightness, entropyVec,Avg_frame_entropy
+    return brightness_values, avg_brightness, entropyVec,Avg_frame_entropy,Avg_frame2frame_entropy
 #List to iterate through videos
-VidNames = ['VidA1.mp4','VidA2.mp4','VidA3.mp4','VidA4.mp4','VidB1.mp4','VidB2.mp4','VidB3.mp4','VidC1.mp4','VidC2.mp4','VidC3.mp4','VidD1.mp4','VidD2.mp4','VidD3.mp4','VidD4.mp4','VidE1.mp4','VidE2.mp4','VidE3.mp4','VidF1.mp4','VidF2.mp4','VidG1.mp4','VidG2.mp4','VidH1.mp4','VidH2.mp4','VidH3.mp4','VidH4.mp4','VidJ1.mp4','VidJ2.mp4']
+VidNames = ['A1.mp4','A2.mp4','C1.mp4','D1.mp4','E2.mp4','F1.mp4','H1.mp4','H2.mp4','H3.mp4','H4.mp4']
+#['VidA1.mp4','VidA2.mp4','VidA3.mp4','VidA4.mp4','VidB1.mp4','VidB2.mp4','VidB3.mp4','VidC1.mp4','VidC2.mp4','VidC3.mp4','VidD1.mp4','VidD2.mp4','VidD3.mp4','VidD4.mp4','VidE1.mp4','VidE2.mp4','VidE3.mp4','VidF1.mp4','VidF2.mp4','VidG1.mp4','VidG2.mp4','VidH1.mp4','VidH2.mp4','VidH3.mp4','VidH4.mp4','VidJ1.mp4','VidJ2.mp4']
 #Setup the dataframe with the columns you want!
-df = pd.DataFrame(columns=['VideoName', 'brightness_values', 'avg_brightness','Complexity_Vector','avg_frame_complexity'])
-filenameBase = 'C://CodeRepos//Videos//'
+df = pd.DataFrame(columns=['VideoName', 'brightness_values', 'avg_brightness','Complexity_Vector','avg_frame_complexity','avg_frame2frame_complexity'])
+filenameBase = 'Videos/'
 #Loop through and calculate
 for ck,vid in enumerate(VidNames):
     filename = filenameBase+vid
     print('Calculating'+' '+vid)
-    [brightness_values, avg_brightness,complexity,avg_complexity] = get_frames_brightness_complexity(filename)
+    [brightness_values, avg_brightness,complexity,avg_complexity,avg_f2f_complexity] = get_frames_brightness_complexity(filename)
     #Add to dataframe
-    df.loc[-1] = [vid,brightness_values,avg_brightness,complexity,avg_complexity]
+    df.loc[-1] = [vid,brightness_values,avg_brightness,complexity,avg_complexity,avg_f2f_complexity]
     df.index = df.index + 1  # shifting index
     df = df.sort_index()  # sorting by index
 #Now write to a user friendly csv file
